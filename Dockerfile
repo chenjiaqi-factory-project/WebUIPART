@@ -8,6 +8,7 @@ WORKDIR /var/app/webServerDir
 Add . /var/app/webServerDir
 # Import packages
 RUN pip install --upgrade pip
+RUN pip install requests
 RUN pip install Flask
 RUN pip install Flask-wtf
 RUN pip install psycopg2-binary
