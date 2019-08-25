@@ -1,6 +1,7 @@
 import random
 import datetime
 import json
+import pandas as pd
 
 
 # 随机生成唯一编码
@@ -60,3 +61,10 @@ def get_current_date():
 # 生成当前时间
 def get_current_time():
     return str(datetime.datetime.now().strftime("%H:%M:%S"))
+
+
+# 创建 csv 文件
+def write_csv(document_list, file_path):
+    doc_pd = pd.DataFrame(document_list)
+    doc_pd.to_csv(file_path)
+    return

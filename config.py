@@ -9,3 +9,6 @@ class Config(object):
     DB_OPS_IP = "127.0.0.1"
     DB_OPS_PORT = "4999"
     DB_OPS_URL = DB_OPS_IP + ':' + DB_OPS_PORT
+
+    DATA_CSV_PATH = './app/data_process/data.csv'
+    DATA_CSV_SEND_PATH = 'data_process/data.csv'

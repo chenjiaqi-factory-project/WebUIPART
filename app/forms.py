@@ -3,7 +3,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 
 
-# Reset password form
+# Data Record form
 class DataRecordForm(FlaskForm):
     boiler_no = StringField('锅炉编号', validators=[DataRequired()])
     gas_consumption = StringField('燃气消耗量', validators=[DataRequired()])
@@ -15,3 +15,7 @@ class DataRecordForm(FlaskForm):
     employee_no = StringField('员工编号', validators=[DataRequired()])
     submit = SubmitField('提交')
 
+
+# Send CSV file form
+class SendCsvFileForm(FlaskForm):
+    submit = SubmitField('下载数据')
