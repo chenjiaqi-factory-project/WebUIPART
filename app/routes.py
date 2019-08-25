@@ -14,16 +14,16 @@ def usage():
     if result.status_code == 200:
         document_list = get_api_info(result)
         document_list.reverse()
-        return render_template('frontPage.html', documents=document_list)
+        return render_template('frontPage.html', documents=document_list, title='数据监测')
     else:
         document_list = [{'Error': 'Server Down.'}]
-        return render_template('frontPage.html', documents=document_list)
+        return render_template('frontPage.html', documents=document_list, title='数据监测')
 
 
 @app.route('/data-submit', methods=['GET'])
 def data_submit_view():
     form = DataRecordForm()
-    return render_template('dataSubmit.html', form=form)
+    return render_template('dataSubmit.html', form=form, title='数据提交')
 
 
 @app.route('/data-submit', methods=['POST'])
