@@ -7,6 +7,7 @@ WORKDIR /var/app/webServerDir
 # Add source code from os into container
 Add . /var/app/webServerDir
 # Import packages
+RUN pip install --upgrade pip
 RUN pip install Flask
 RUN pip install Flask-wtf
 RUN pip install psycopg2-binary
