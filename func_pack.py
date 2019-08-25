@@ -45,3 +45,18 @@ def get_api_info(request_result):
             list_content.append(item)
         # 返回处理好的 list
         return list_content
+
+
+# 生成当前时间 格式为 %Y-%m-%d/%H:%M:%S
+def get_current_datetime():
+    return str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+
+
+# 生成当前日期
+def get_current_date():
+    return str(datetime.datetime.now().strftime("%Y-%m-%d"))
+
+
+# 生成当前时间
+def get_current_time():
+    return str(datetime.datetime.now().strftime("%H:%M:%S"))

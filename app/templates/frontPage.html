@@ -11,9 +11,9 @@
     {% block app_content %}
         <!-- ########## -->
 
-        <h1>Developers Guide & Tutorial</h1>
+        <h1>数字化工厂监测平台</h1>
         <br>
-        <h3>API usages</h3>
+        <h3>数据监测仪表板</h3>
         <br>
 
         <!-- 已发表的言论 -->
@@ -29,7 +29,8 @@
                         <th>出水温度</th>
                         <th>回水温度</th>
                         <th>地点</th>
-                        <th>记录时间</th>
+                        <th>提交日期</th>
+                        <th>提交时间</th>
                         <th>员工编号</th>
                     </tr>
                     {% for document in documents %}
@@ -41,7 +42,8 @@
                         <td>{{ document.water_out_temperature }}</td>
                         <td>{{ document.water_in_temperature }}</td>
                         <td>{{ document.location }}</td>
-                        <td>{{ document.datetime }}</td>
+                        <td>{{ document.date }}</td>
+                        <td>{{ document.time }}</td>
                         <td>{{ document.employee_no }}</td>
                     </tr>
                     {% endfor %}
@@ -56,7 +58,7 @@
                         <!--<b>Administer</b> said:-->
                     <!--</div>-->
                     <div class="panel-body">
-                        <h4>No more usage informations currently.</h4>
+                        <h4>No more informations currently.</h4>
                     </div>
                     <div class="panel-footer">
                         <b>Administer</b> at 2019-04-20/17:00:00
