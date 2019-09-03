@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired
 
 
@@ -19,3 +19,12 @@ class DataRecordForm(FlaskForm):
 # Send CSV file form
 class SendCsvFileForm(FlaskForm):
     submit = SubmitField('下载数据')
+
+
+# Data stats form
+class DataStatsForm(FlaskForm):
+    start_date = DateField('起始日期', validators=[DataRequired()])
+    end_date = DateField('终止日期', validators=[DataRequired()])
+    # Select fields keep a choices property which is a sequence of (value, label) pairs.
+    stats_type = SelectField('统计类型', choices=[('gas', '燃气统计'), ('water_elec', '水电统计')], validators=[DataRequired()])
+    submit = SubmitField('开始统计')

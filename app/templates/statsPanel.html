@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+<!-- import form receiving model -->
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>数据统计</h1>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Just send a form to wtf is enough -->
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="table-responsive">
+        <table class="table">
+                    <tr>
+                        <th>锅炉所在地</th>
+                        <th>锅炉编号</th>
+                        <th>起始日期</th>
+                        <th>起始燃气读数</th>
+                        <th>终止日期</th>
+                        <th>终止燃气读数</th>
+                        <th>燃气消耗量</th>
+                    </tr>
+                    <tr>
+                        <td>{{ start_gas_doc.boiler_room }}</td>
+                        <td>{{ start_gas_doc.boiler_no }}</td>
+                        <td>{{ start_gas_doc.date }}</td>
+                        <td>{{ start_gas_doc.gas_indicator }}</td>
+                        <td>{{ end_gas_doc.date }}</td>
+                        <td>{{ end_gas_doc.gas_indicator }}</td>
+                        <td>{{ gas_consumption }}</td>
+                    </tr>
+        </table>
+    </div>
+
+    <br>
+    <br>
+{% endblock %}

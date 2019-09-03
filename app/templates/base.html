@@ -22,7 +22,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <div class="container">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url_for('panel_view') }}">数据监测</a></li>
+                        <li><a href="{{ url_for('gas_panel_view') }}">燃气监测</a></li>
                         <li><a href="{{ url_for('data_submit_view') }}">数据提交</a></li>
                         <li><a href="{{ url_for('data_download_view') }}">数据下载</a></li>
                     </ul>
@@ -38,10 +38,15 @@
 
     {% block content %}
             <div class="container">
-            {% with messages = get_flashed_messages() %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                {% for message in messages %}
-                <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% for category, message in messages %}
+                    {% if category == 'info' %}
+                        <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% elif category == 'error' %}
+                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    {% endif %}
+
                 {% endfor %}
             {% endif %}
             {% endwith %}
