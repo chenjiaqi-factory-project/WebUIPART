@@ -88,11 +88,23 @@ def get_current_date():
     return str(datetime.datetime.now().strftime("%Y-%m-%d"))
 
 
+# 以 strftime 生成当前日期
+def get_current_date_strftime():
+    return datetime.datetime.now()
+
+
 # 生成上一天日期
 def get_last_date():
     now = datetime.datetime.now()
     last_datetime = now - timedelta(days=1)
     return str(last_datetime.strftime("%Y-%m-%d"))
+
+
+# 以 strftime 生成上一天日期
+def get_last_date_strftime():
+    now = datetime.datetime.now()
+    last_datetime = now - timedelta(days=1)
+    return last_datetime
 
 
 # 生成当前时间

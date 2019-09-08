@@ -1,11 +1,15 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired
+from static_data import GasInfoClass
+
+# choice = [('地点A/1号锅炉', '地点A - 1号锅炉')]
+gasInfoClass = GasInfoClass()
 
 
 # Data Record form
 class DataRecordForm(FlaskForm):
-    boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=[('地点A/1号锅炉', '地点A - 1号锅炉')], validators=[DataRequired()])
+    boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=gasInfoClass.get_gas_field_list(), validators=[DataRequired()])
     gas_indicator = StringField('燃气表读数', validators=[DataRequired()])
     employee_no = StringField('员工编号', validators=[DataRequired()])
     submit = SubmitField('提交')
@@ -18,14 +22,13 @@ class SendCsvFileForm(FlaskForm):
 
 # View Panel Form
 class ViewPanelSearchForm(FlaskForm):
-    boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=[('地点A/1号锅炉', '地点A - 1号锅炉')], validators=[DataRequired()])
-    submit = SubmitField('搜索数据')
+    boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=gasInfoClass.get_gas_field_list(), validators=[DataRequired()])
+    submit = SubmitField('检索数据')
 
 
 # Data stats form
 class DataStatsForm(FlaskForm):
-    boiler_room = SelectField('选择锅炉房', choices=[('地点A', '地点A')], validators=[DataRequired()])
-    boiler_no = SelectField('选择锅炉', choices=[('1号锅炉', '1号锅炉')], validators=[DataRequired()])
+    boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=gasInfoClass.get_gas_field_list(), validators=[DataRequired()])
     start_date = DateField('起始日期', validators=[DataRequired()])
     end_date = DateField('终止日期', validators=[DataRequired()])
     # Select fields keep a choices property which is a sequence of (value, label) pairs.

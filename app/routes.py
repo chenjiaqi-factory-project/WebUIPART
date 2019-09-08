@@ -2,8 +2,9 @@ from app import app
 from flask import jsonify, render_template, request, flash, redirect, url_for, send_file, Response
 from config import Config
 from func_pack import get_api_info, get_current_datetime, get_current_date, get_current_time, write_csv, get_api_info_first
-from func_pack import get_last_date
+from func_pack import get_last_date, get_current_date_strftime, get_last_date_strftime
 from app.forms import DataRecordForm, SendCsvFileForm, DataStatsForm, ViewPanelSearchForm
+from static_data import GasInfoClass
 import requests
 
 
@@ -45,24 +46,33 @@ def stats_panel():
 
     # post function
     if form.validate_on_submit():
-        sum_url = basic_sum_url + str(form.boiler_room.data) + '/' + str(form.boiler_no.data) + '/' +\
+        boiler_room = str(form.boiler_room_and_no.data).split('/')[0]
+        boiler_no = str(form.boiler_room_and_no.data).split('/')[1]
+        sum_url = basic_sum_url + boiler_room + '/' + boiler_no + '/' +\
                         str(form.start_date.data) + '/' + str(form.end_date.data)
-        successive_url = basic_successive_url + str(form.boiler_room.data) + '/' + str(form.boiler_no.data) + '/' +\
+        successive_url = basic_successive_url + boiler_room + '/' + boiler_no + '/' +\
                          str(form.start_date.data) + '/' + str(form.end_date.data)
-        flash('燃气数据统计成功!', 'success')
     # get function
     else:
         today_date = get_current_date()
         last_date = get_last_date()
-        # ToDo: 修改默认 URL
-        sum_url = basic_sum_url + '地点A' + '/' + '1号锅炉' + '/' + last_date + '/' + today_date
-        successive_url = basic_successive_url + '地点A' + '/' + '1号锅炉' + '/' + last_date + '/' + today_date
-        flash('默认统计"最近两次提交"的燃气消耗量。', 'info')
+        form.start_date.data = get_last_date_strftime()
+        form.end_date.data = get_current_date_strftime()
+
+        default_boiler_room_and_no = GasInfoClass().get_gas_url_list()[0]
+        sum_url = basic_sum_url + default_boiler_room_and_no + '/' + last_date + '/' + today_date
+        successive_url = basic_successive_url + default_boiler_room_and_no + '/' + last_date + '/' + today_date
+        flash('默认统计"今日与昨日"的燃气消耗量。', 'info')
     # get relative gas data
     # get first with dict type
     consumption_sum_dict = get_api_info_first(requests.get(sum_url))
     # get all with list type
     consumption_successive_list = get_api_info(requests.get(successive_url))
+    if consumption_sum_dict['gas_consumption_type'] == '错误' or\
+            consumption_sum_dict['gas_consumption_type'] == '日期区间错误':
+        flash('无相关数据!', 'danger')
+    else:
+        flash('数据统计成功!', 'success')
     # render templates
     return render_template('statsPanel.html', consumption_sum_dict=consumption_sum_dict,
                            consumption_successive_list=consumption_successive_list, form=form, title='数据统计')
