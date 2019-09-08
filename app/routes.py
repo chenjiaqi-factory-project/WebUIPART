@@ -3,7 +3,7 @@ from flask import jsonify, render_template, request, flash, redirect, url_for, s
 from config import Config
 from func_pack import get_api_info, get_current_datetime, get_current_date, get_current_time, write_csv, get_api_info_first
 from func_pack import get_last_date
-from app.forms import DataRecordForm, SendCsvFileForm, DataStatsForm
+from app.forms import DataRecordForm, SendCsvFileForm, DataStatsForm, ViewPanelSearchForm
 import requests
 
 
@@ -11,60 +11,27 @@ import requests
 @app.route('/', methods=['GET'])
 @app.route('/boiler-panel', methods=['GET'])
 def gas_panel_view():
+    form = ViewPanelSearchForm()
     get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/all-documents'
     result = requests.get(get_doc_url)
     if result.status_code == 200:
         document_list = get_api_info(result)
         document_list.reverse()
-        return render_template('gasPanel.html', documents=document_list, title='燃气监测')
     else:
         document_list = [{'Error': 'Server Down.'}]
-        return render_template('gasPanel.html', documents=document_list, title='燃气监测')
+    return render_template('gasPanel.html', documents=document_list, title='燃气监测', form=form)
 
 
-# stats panel
-# @app.route('/stats-panel', methods=['GET', 'POST'])
-# def stats_panel():
-#     form = DataStatsForm()
-#     # functional url
-#     date_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/date/fuzzy/'
-#
-#     # post function
-#     if form.validate_on_submit():
-#         start_date_url = date_url + str(form.start_date.data)
-#         end_date_url = date_url + str(form.end_date.data)
-#     # get function
-#     else:
-#         today_date = get_current_date()
-#         last_date = get_last_date()
-#         start_date_url = date_url + last_date
-#         end_date_url = date_url + today_date
-#
-#     # get relative gas data
-#     start_gas_data = requests.get(start_date_url)
-#     end_gas_data = requests.get(end_date_url)
-#     # if both return correct answer
-#     if start_gas_data.status_code == 200 and end_gas_data.status_code == 200:
-#         start_gas_doc = get_api_info_first(start_gas_data)
-#         end_gas_doc = get_api_info_first(end_gas_data)
-#
-#         # if there is no date
-#         if 'error' in start_gas_doc:
-#             flash('您输入的起始日期没有对应数据! 请重新输入日期。', 'error')
-#             return render_template('statsPanel.html', form=form,
-#                                    start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc,
-#                                    gas_consumption='无法统计')
-#         elif 'error' in end_gas_doc:
-#             flash('您输入的终止日期没有对应数据! 请重新输入日期。', 'error')
-#             return render_template('statsPanel.html', form=form,
-#                                    start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc,
-#                                    gas_consumption='无法统计')
-#
-#         # 正常情况
-#         gas_consumption = round(abs(float(start_gas_doc['gas_indicator']) - float(end_gas_doc['gas_indicator'])), 3)
-#         flash('数据统计成功!', 'info')
-#         return render_template('statsPanel.html', form=form,
-#                                start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc, gas_consumption=gas_consumption)
+@app.route('/', methods=['POST'])
+@app.route('/boiler-panel', methods=['POST'])
+def gas_panel_search():
+    form = ViewPanelSearchForm()
+    basic_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/boiler-room-and-no/fuzzy/'
+    if form.validate_on_submit():
+        search_doc_url = basic_doc_url + str(form.boiler_room_and_no.data)
+        gas_doc_list = get_api_info(requests.get(search_doc_url))
+        flash('数据检索成功!', 'success')
+        return render_template('gasPanel.html', documents=gas_doc_list, title='燃气监测', form=form)
 
 
 # status-panel version 2
@@ -82,6 +49,7 @@ def stats_panel():
                         str(form.start_date.data) + '/' + str(form.end_date.data)
         successive_url = basic_successive_url + str(form.boiler_room.data) + '/' + str(form.boiler_no.data) + '/' +\
                          str(form.start_date.data) + '/' + str(form.end_date.data)
+        flash('燃气数据统计成功!', 'success')
     # get function
     else:
         today_date = get_current_date()
@@ -89,6 +57,7 @@ def stats_panel():
         # ToDo: 修改默认 URL
         sum_url = basic_sum_url + '地点A' + '/' + '1号锅炉' + '/' + last_date + '/' + today_date
         successive_url = basic_successive_url + '地点A' + '/' + '1号锅炉' + '/' + last_date + '/' + today_date
+        flash('默认统计"最近两次提交"的燃气消耗量。', 'info')
     # get relative gas data
     # get first with dict type
     consumption_sum_dict = get_api_info_first(requests.get(sum_url))
@@ -96,7 +65,7 @@ def stats_panel():
     consumption_successive_list = get_api_info(requests.get(successive_url))
     # render templates
     return render_template('statsPanel.html', consumption_sum_dict=consumption_sum_dict,
-                           consumption_successive_list=consumption_successive_list, form=form)
+                           consumption_successive_list=consumption_successive_list, form=form, title='数据统计')
 
 
 @app.route('/data-submit', methods=['GET'])
@@ -108,18 +77,20 @@ def data_submit_view():
 @app.route('/data-submit', methods=['POST'])
 def data_submit_post():
     form = DataRecordForm()
-    post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/document'
+    post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document'
     doc_dict = dict(request.form)
+    doc_dict['boiler_room'] = str(form.boiler_room_and_no.data).split('/')[0]
+    doc_dict['boiler_no'] = str(form.boiler_room_and_no.data).split('/')[1]
     doc_dict['datetime'] = get_current_datetime()
     doc_dict['date'] = get_current_date()
     doc_dict['time'] = get_current_time()
     if form.validate_on_submit():
         result = requests.post(post_doc_url, data=doc_dict)
         if result.status_code == 200:
-            flash('数据提交成功')
+            flash('数据提交成功', 'success')
             return redirect(url_for('data_submit_view'))
         else:
-            flash('发生了错误, 数据未成功提交')
+            flash('发生了错误, 数据未成功提交', 'danger')
             return redirect(url_for('data_submit_view'))
 
 
@@ -138,6 +109,7 @@ def data_download_post():
         if result.status_code == 200:
             document_list = get_api_info(result)
             write_csv(document_list, Config.DATA_CSV_PATH)
+            flash('数据下载成功!', 'success')
             return send_file(Config.DATA_CSV_SEND_PATH, mimetype='text/csv',
                              attachment_filename='data.csv', as_attachment=True)
 

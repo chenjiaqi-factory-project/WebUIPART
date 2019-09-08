@@ -22,8 +22,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <div class="container">
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url_for('gas_panel_view') }}">燃气监测</a></li>
-                        <li><a href="{{ url_for('data_submit_view') }}">数据提交</a></li>
+                        <li><a href="{{ url_for('gas_panel_view') }}">数据总览</a></li>
+                        <li><a href="{{ url_for('stats_panel') }}">数据统计</a></li>
+                        <li><a href="{{ url_for('data_submit_view') }}">燃气数据提交</a></li>
                         <li><a href="{{ url_for('data_download_view') }}">数据下载</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -41,10 +42,14 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    {% if category == 'info' %}
-                        <div class="alert alert-info" role="alert">{{ message }}</div>
-                    {% elif category == 'error' %}
-                        <div class="alert alert-danger" role="alert">{{ message }}</div>
+                    {% if category == 'success' %}
+                        <div class="alert alert-success" role="alert"><b>信息: </b>{{ message }}</div>
+                    {% elif category == 'info' %}
+                        <div class="alert alert-info" role="alert"><b>消息: </b>{{ message }}</div>
+                    {% elif category == 'danger' %}
+                        <div class="alert alert-danger" role="alert"><b>警告: </b>{{ message }}</div>
+                    {% elif category == 'danger' %}
+                        <div class="alert alert-danger" role="alert"><b>错误: </b>{{ message }}</div>
                     {% endif %}
 
                 {% endfor %}

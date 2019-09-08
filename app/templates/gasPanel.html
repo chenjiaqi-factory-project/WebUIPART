@@ -13,9 +13,17 @@
 
         <h1>数字化工厂监测平台</h1>
         <br>
-        <h3>数据监测仪表板</h3>
+        <h3>数据检索</h3>
         <br>
-
+        <div class="row">
+            <div class="col-md-4">
+                <!-- Just send a form to wtf is enough -->
+                {{ wtf.quick_form(form) }}
+            </div>
+        </div>
+        <br>
+        <h3>数据总览</h3>
+        <br>
         <!-- 已发表的言论 -->
         {% if documents %}
             <div class="container">
@@ -25,7 +33,6 @@
                         <th>锅炉所在地</th>
                         <th>锅炉编号</th>
                         <th>燃气读数</th>
-                        <th>燃气消耗量</th>
                         <th>提交日期</th>
                         <th>提交时间</th>
                         <th>员工编号</th>
@@ -35,7 +42,6 @@
                         <td>{{ document.boiler_room }}</td>
                         <td>{{ document.boiler_no }}</td>
                         <td>{{ document.gas_indicator }}</td>
-                        <td>{{ document.gas_consumption }}</td>
                         <td>{{ document.date }}</td>
                         <td>{{ document.time }}</td>
                         <td>{{ document.employee_no }}</td>
