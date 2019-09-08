@@ -23,48 +23,80 @@ def gas_panel_view():
 
 
 # stats panel
+# @app.route('/stats-panel', methods=['GET', 'POST'])
+# def stats_panel():
+#     form = DataStatsForm()
+#     # functional url
+#     date_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/date/fuzzy/'
+#
+#     # post function
+#     if form.validate_on_submit():
+#         start_date_url = date_url + str(form.start_date.data)
+#         end_date_url = date_url + str(form.end_date.data)
+#     # get function
+#     else:
+#         today_date = get_current_date()
+#         last_date = get_last_date()
+#         start_date_url = date_url + last_date
+#         end_date_url = date_url + today_date
+#
+#     # get relative gas data
+#     start_gas_data = requests.get(start_date_url)
+#     end_gas_data = requests.get(end_date_url)
+#     # if both return correct answer
+#     if start_gas_data.status_code == 200 and end_gas_data.status_code == 200:
+#         start_gas_doc = get_api_info_first(start_gas_data)
+#         end_gas_doc = get_api_info_first(end_gas_data)
+#
+#         # if there is no date
+#         if 'error' in start_gas_doc:
+#             flash('您输入的起始日期没有对应数据! 请重新输入日期。', 'error')
+#             return render_template('statsPanel.html', form=form,
+#                                    start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc,
+#                                    gas_consumption='无法统计')
+#         elif 'error' in end_gas_doc:
+#             flash('您输入的终止日期没有对应数据! 请重新输入日期。', 'error')
+#             return render_template('statsPanel.html', form=form,
+#                                    start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc,
+#                                    gas_consumption='无法统计')
+#
+#         # 正常情况
+#         gas_consumption = round(abs(float(start_gas_doc['gas_indicator']) - float(end_gas_doc['gas_indicator'])), 3)
+#         flash('数据统计成功!', 'info')
+#         return render_template('statsPanel.html', form=form,
+#                                start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc, gas_consumption=gas_consumption)
+
+
+# status-panel version 2
+# stats panel
 @app.route('/stats-panel', methods=['GET', 'POST'])
 def stats_panel():
     form = DataStatsForm()
     # functional url
-    date_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/date/fuzzy/'
+    basic_successive_url = 'http://' + Config.DB_OPS_URL + '/api/gas/calculating/gas-consumption/successive/'
+    basic_sum_url = 'http://' + Config.DB_OPS_URL + '/api/gas/calculating/gas-consumption/inexact-date/'
 
     # post function
     if form.validate_on_submit():
-        start_date_url = date_url + str(form.start_date.data)
-        end_date_url = date_url + str(form.end_date.data)
+        sum_url = basic_sum_url + str(form.boiler_room.data) + '/' + str(form.boiler_no.data) + '/' +\
+                        str(form.start_date.data) + '/' + str(form.end_date.data)
+        successive_url = basic_successive_url + str(form.boiler_room.data) + '/' + str(form.boiler_no.data) + '/' +\
+                         str(form.start_date.data) + '/' + str(form.end_date.data)
     # get function
     else:
         today_date = get_current_date()
         last_date = get_last_date()
-        start_date_url = date_url + last_date
-        end_date_url = date_url + today_date
-
+        # ToDo: 修改默认 URL
+        sum_url = basic_sum_url + '地点A' + '/' + '1号锅炉' + '/' + last_date + '/' + today_date
+        successive_url = basic_successive_url + '地点A' + '/' + '1号锅炉' + '/' + last_date + '/' + today_date
     # get relative gas data
-    start_gas_data = requests.get(start_date_url)
-    end_gas_data = requests.get(end_date_url)
-    # if both return correct answer
-    if start_gas_data.status_code == 200 and end_gas_data.status_code == 200:
-        start_gas_doc = get_api_info_first(start_gas_data)
-        end_gas_doc = get_api_info_first(end_gas_data)
-
-        # if there is no date
-        if 'error' in start_gas_doc:
-            flash('您输入的起始日期没有对应数据! 请重新输入日期。', 'error')
-            return render_template('statsPanel.html', form=form,
-                                   start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc,
-                                   gas_consumption='无法统计')
-        elif 'error' in end_gas_doc:
-            flash('您输入的终止日期没有对应数据! 请重新输入日期。', 'error')
-            return render_template('statsPanel.html', form=form,
-                                   start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc,
-                                   gas_consumption='无法统计')
-
-        # 正常情况
-        gas_consumption = round(abs(float(start_gas_doc['gas_indicator']) - float(end_gas_doc['gas_indicator'])), 3)
-        flash('数据统计成功!', 'info')
-        return render_template('statsPanel.html', form=form,
-                               start_gas_doc=start_gas_doc, end_gas_doc=end_gas_doc, gas_consumption=gas_consumption)
+    # get first with dict type
+    consumption_sum_dict = get_api_info_first(requests.get(sum_url))
+    # get all with list type
+    consumption_successive_list = get_api_info(requests.get(successive_url))
+    # render templates
+    return render_template('statsPanel.html', consumption_sum_dict=consumption_sum_dict,
+                           consumption_successive_list=consumption_successive_list, form=form)
 
 
 @app.route('/data-submit', methods=['GET'])

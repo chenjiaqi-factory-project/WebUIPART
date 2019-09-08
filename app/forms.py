@@ -23,6 +23,8 @@ class SendCsvFileForm(FlaskForm):
 
 # Data stats form
 class DataStatsForm(FlaskForm):
+    boiler_room = SelectField('选择锅炉房', choices=[('地点A', '地点A')], validators=[DataRequired()])
+    boiler_no = SelectField('选择锅炉', choices=[('1号锅炉', '1号锅炉')], validators=[DataRequired()])
     start_date = DateField('起始日期', validators=[DataRequired()])
     end_date = DateField('终止日期', validators=[DataRequired()])
     # Select fields keep a choices property which is a sequence of (value, label) pairs.
