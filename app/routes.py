@@ -114,7 +114,7 @@ def data_download_view():
 def data_download_post():
     form = SendCsvFileForm()
     if form.validate_on_submit():
-        get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/document/all-documents'
+        get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/all-documents'
         result = requests.get(get_doc_url)
         if result.status_code == 200:
             document_list = get_api_info(result)
