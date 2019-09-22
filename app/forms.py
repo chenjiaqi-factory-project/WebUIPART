@@ -1,16 +1,33 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, DateField, SelectField
 from wtforms.validators import DataRequired
-from static_data import GasInfoClass
+from static_data import GasInfoClass, WaterInfoClass, ElecInfoClass
 
 # choice = [('地点A/1号锅炉', '地点A - 1号锅炉')]
 gasInfoClass = GasInfoClass()
+waterInfoClass = WaterInfoClass()
 
 
-# Data Record form
-class DataRecordForm(FlaskForm):
+# Gas Data Record form
+class GasDataRecordForm(FlaskForm):
     boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=gasInfoClass.get_gas_field_list(), validators=[DataRequired()])
     gas_indicator = StringField('燃气表读数', validators=[DataRequired()])
+    employee_no = StringField('员工编号', validators=[DataRequired()])
+    submit = SubmitField('提交')
+
+
+# Water Data Record form
+class WaterDataRecordForm(FlaskForm):
+    factory_no = SelectField('选择工厂', choices=waterInfoClass.get_gas_field_list(), validators=[DataRequired()])
+    water_indicator = StringField('用水量', validators=[DataRequired()])
+    employee_no = StringField('员工编号', validators=[DataRequired()])
+    submit = SubmitField('提交')
+
+
+# Elec Data Record form
+class ElecDataRecordForm(FlaskForm):
+    factory_no = SelectField('选择工厂', choices=waterInfoClass.get_gas_field_list(), validators=[DataRequired()])
+    water_indicator = StringField('用电量', validators=[DataRequired()])
     employee_no = StringField('员工编号', validators=[DataRequired()])
     submit = SubmitField('提交')
 

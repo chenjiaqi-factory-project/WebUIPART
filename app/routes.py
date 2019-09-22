@@ -3,7 +3,8 @@ from flask import jsonify, render_template, request, flash, redirect, url_for, s
 from config import Config
 from func_pack import get_api_info, get_current_datetime, get_current_date, get_current_time, write_csv, get_api_info_first
 from func_pack import get_last_date, get_current_date_strftime, get_last_date_strftime
-from app.forms import DataRecordForm, SendCsvFileForm, DataStatsForm, ViewPanelSearchForm
+from app.forms import GasDataRecordForm, SendCsvFileForm, DataStatsForm,\
+    ViewPanelSearchForm, WaterDataRecordForm, ElecDataRecordForm
 from static_data import GasInfoClass
 import requests
 
@@ -78,15 +79,15 @@ def stats_panel():
                            consumption_successive_list=consumption_successive_list, form=form, title='数据统计')
 
 
-@app.route('/data-submit', methods=['GET'])
-def data_submit_view():
-    form = DataRecordForm()
-    return render_template('dataSubmit.html', form=form, title='数据提交')
+@app.route('/gas-data-submit', methods=['GET'])
+def gas_data_submit_view():
+    form = GasDataRecordForm()
+    return render_template('gasDataSubmit.html', form=form, title='燃气数据提交')
 
 
-@app.route('/data-submit', methods=['POST'])
+@app.route('/gas-data-submit', methods=['POST'])
 def data_submit_post():
-    form = DataRecordForm()
+    form = GasDataRecordForm()
     post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document'
     doc_dict = dict(request.form)
     doc_dict['boiler_room'] = str(form.boiler_room_and_no.data).split('/')[0]
@@ -98,10 +99,60 @@ def data_submit_post():
         result = requests.post(post_doc_url, data=doc_dict)
         if result.status_code == 200:
             flash('数据提交成功', 'success')
-            return redirect(url_for('data_submit_view'))
+            return redirect(url_for('gas_data_submit_view'))
         else:
             flash('发生了错误, 数据未成功提交', 'danger')
-            return redirect(url_for('data_submit_view'))
+            return redirect(url_for('gas_data_submit_view'))
+
+
+@app.route('/water-data-submit', methods=['GET'])
+def water_data_submit_view():
+    form = WaterDataRecordForm()
+    return render_template('waterDataSubmit.html', form=form, title='用水量数据提交')
+
+
+@app.route('/water-data-submit', methods=['POST'])
+def water_data_submit_post():
+    form = WaterDataRecordForm()
+    post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/water/document'
+    doc_dict = dict(request.form)
+    doc_dict['factory_no'] = form.factory_no.data
+    doc_dict['datetime'] = get_current_datetime()
+    doc_dict['date'] = get_current_date()
+    doc_dict['time'] = get_current_time()
+    if form.validate_on_submit():
+        result = requests.post(post_doc_url, data=doc_dict)
+        if result.status_code == 200:
+            flash('数据提交成功', 'success')
+            return redirect(url_for('water_data_submit_view'))
+        else:
+            flash('发生了错误, 数据未成功提交', 'danger')
+            return redirect(url_for('water_data_submit_view'))
+
+
+@app.route('/elec-data-submit', methods=['GET'])
+def elec_data_submit_view():
+    form = ElecDataRecordForm()
+    return render_template('elecDataSubmit.html', form=form, title='用电量数据提交')
+
+
+@app.route('/water-data-submit', methods=['POST'])
+def elec_data_submit_post():
+    form = ElecDataRecordForm()
+    post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/water/document'
+    doc_dict = dict(request.form)
+    doc_dict['factory_no'] = form.factory_no.data
+    doc_dict['datetime'] = get_current_datetime()
+    doc_dict['date'] = get_current_date()
+    doc_dict['time'] = get_current_time()
+    if form.validate_on_submit():
+        result = requests.post(post_doc_url, data=doc_dict)
+        if result.status_code == 200:
+            flash('数据提交成功', 'success')
+            return redirect(url_for('elec_data_submit_view'))
+        else:
+            flash('发生了错误, 数据未成功提交', 'danger')
+            return redirect(url_for('elec_data_submit_view'))
 
 
 @app.route('/downloading', methods=['GET'])
