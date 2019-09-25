@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+<!-- import form receiving model -->
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+    <h1>用水量数据统计</h1>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Just send a form to wtf is enough -->
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
+    <br>
+    <br>
+    <h3>统计总量</h3>
+    <div class="table-responsive">
+        <table class="table">
+                    <tr>
+                        <th>水表所在地</th>
+                        <th>起始日期</th>
+                        <th>终止日期</th>
+                        <th>起始燃气读数</th>
+                        <th>终止燃气读数</th>
+                        <th>燃气消耗量</th>
+                        <th>消耗类型</th>
+                    </tr>
+                    <tr>
+                        <td>{{ consumption_sum_dict.first_document.factory_no }}</td>
+                        <td>{{ consumption_sum_dict.first_document.date }}</td>
+                        <td>{{ consumption_sum_dict.last_document.date }}</td>
+                        <td>{{ consumption_sum_dict.first_document.water_indicator }}</td>
+                        <td>{{ consumption_sum_dict.last_document.water_indicator }}</td>
+                        <td>{{ consumption_sum_dict.water_consumption }}</td>
+                        <td>{{ consumption_sum_dict.water_consumption_type }}</td>
+                    </tr>
+        </table>
+    </div>
+    <br>
+    <h3>统计明细</h3>
+    <div class="table-responsive">
+        <table class="table">
+                    <tr>
+                        <th>水表所在地</th>
+                        <th>起始日期</th>
+                        <th>终止日期</th>
+                        <th>起始燃气读数</th>
+                        <th>终止燃气读数</th>
+                        <th>燃气消耗量</th>
+                        <th>消耗类型</th>
+                    </tr>
+                    {% for document in consumption_successive_list %}
+                    <tr>
+                        <td>{{ document.first_document.factory_no }}</td>
+                        <td>{{ document.first_document.date }}</td>
+                        <td>{{ document.last_document.date }}</td>
+                        <td>{{ document.first_document.water_indicator }}</td>
+                        <td>{{ document.last_document.water_indicator }}</td>
+                        <td>{{ document.water_consumption }}</td>
+                        <td>{{ document.water_consumption_type }}</td>
+                    </tr>
+                    {% endfor %}
+        </table>
+    </div>
+{% endblock %}

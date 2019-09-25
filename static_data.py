@@ -36,10 +36,10 @@ class WaterInfoClass(object):
             '3号工厂'
         ]
 
-    def _get_foctory_no(self):
+    def _get_factory_no(self):
         return self._factory_no
 
-    def get_gas_field_list(self):
+    def get_water_field_list(self):
         field_list = list()
         for record in self._factory_no:
             location = str(record).split('/')[0]
@@ -47,7 +47,7 @@ class WaterInfoClass(object):
             field_list.append(record_set)
         return field_list
 
-    def get_gas_url_list(self):
+    def get_water_url_list(self):
         return self._factory_no
 
 
@@ -61,10 +61,10 @@ class ElecInfoClass(object):
             '3号工厂'
         ]
 
-    def _get_foctory_no(self):
+    def _get_factory_no(self):
         return self._factory_no
 
-    def get_gas_field_list(self):
+    def get_elec_field_list(self):
         field_list = list()
         for record in self._factory_no:
             location = str(record).split('/')[0]
@@ -72,6 +72,6 @@ class ElecInfoClass(object):
             field_list.append(record_set)
         return field_list
 
-    def get_gas_url_list(self):
+    def get_elec_url_list(self):
         return self._factory_no
 
