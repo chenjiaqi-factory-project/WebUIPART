@@ -182,14 +182,24 @@ def data_download_view():
 def data_download_post():
     form = SendCsvFileForm()
     if form.validate_on_submit():
-        get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/all-documents'
+        # choose data type
+        if form.gas_submit.data is True:
+            get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/all-documents'
+            file_name = 'gasData.csv'
+        elif form.elec_submit.data is True:
+            get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/elec/document/all-documents'
+            file_name = 'elecData.csv'
+        else:
+            get_doc_url = 'http://' + Config.DB_OPS_URL + '/api/water/document/all-documents'
+            file_name = 'waterData.csv'
+
         result = requests.get(get_doc_url)
         if result.status_code == 200:
             document_list = get_api_info(result)
             write_csv(document_list, Config.DATA_CSV_PATH)
             flash('数据下载成功!', 'success')
             return send_file(Config.DATA_CSV_SEND_PATH, mimetype='text/csv',
-                             attachment_filename='data.csv', as_attachment=True)
+                             attachment_filename=file_name, as_attachment=True)
 
 
 

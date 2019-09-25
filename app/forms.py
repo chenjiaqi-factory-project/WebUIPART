@@ -27,7 +27,9 @@ class WaterDataRecordForm(FlaskForm):
 
 # Send CSV file form
 class SendCsvFileForm(FlaskForm):
-    submit = SubmitField('下载数据')
+    gas_submit = SubmitField('下载燃气数据')
+    water_submit = SubmitField('下载用水量数据')
+    elec_submit = SubmitField('下载用电量数据')
 
 
 # View Panel Form
