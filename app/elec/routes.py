@@ -46,14 +46,14 @@ def elec_stats_panel():
     else:
         flash('数据统计成功!', 'success')
     # render templates
-    return render_template('elecStatsPanel.html', consumption_sum_dict=consumption_sum_dict,
+    return render_template('elec/elecStatsPanel.html', consumption_sum_dict=consumption_sum_dict,
                            consumption_successive_list=consumption_successive_list, form=form, title='用电量数据统计')
 
 
 @bp.route('/elec-data-submit', methods=['GET'])
 def elec_data_submit_view():
     form = ElecDataRecordForm()
-    return render_template('elecDataSubmit.html', form=form, title='用电量数据提交')
+    return render_template('elec/elecDataSubmit.html', form=form, title='用电量数据提交')
 
 
 @bp.route('/elec-data-submit', methods=['POST'])

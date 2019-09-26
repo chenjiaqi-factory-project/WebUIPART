@@ -3,6 +3,8 @@ import datetime
 from datetime import timedelta
 import json
 import pandas as pd
+import requests
+from config import Config
 
 
 # 随机生成唯一编码
@@ -117,3 +119,23 @@ def write_csv(document_list, file_path):
     doc_pd = pd.DataFrame(document_list)
     doc_pd.to_csv(file_path)
     return
+
+
+# 将 bytes 转换为 string
+def _bytes_to_str(bytes_info):
+    return bytes_info.decode("utf-8")
+
+
+# 生成 4 个随机数
+def generate_random_code():
+    code = ''
+    identifiers = Config.IDENTIFIERS
+    for item in range(4):
+        text = random.choice(identifiers)
+        code += text
+    return code
+
+
+if __name__ == '__main__':
+
+    pass
