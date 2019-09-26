@@ -1,6 +1,7 @@
 from app import app
 from flask import jsonify, render_template, request, flash, redirect, url_for, send_file, Response
 from config import Config
+from flask_login import logout_user
 from func_pack import get_api_info, get_current_datetime, get_current_date, get_current_time, write_csv, get_api_info_first
 import requests
 from app.forms import ViewPanelSearchForm, SendCsvFileForm
@@ -63,6 +64,11 @@ def data_download_post():
                              attachment_filename=file_name, as_attachment=True)
 
 
+# -------------- Log Out --------------- #
+@app.route('/logout', methods=['GET'])
+def logout_func():
+    logout_user()
+    return redirect(url_for('auth.login_view'))
 
 
 

@@ -8,8 +8,43 @@
     <p>创建该系统的新用户。</p>
     <div class="row">
         <div class="col-md-4">
+        <br>
             <!-- Just send a form to wtf is enough -->
-            {{ wtf.quick_form(form) }}
+            <form class="form-signup" method="post">
+                {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.email.label }}
+                <p>{{ form.email(size = 64) }}</p>
+                <small id="emailHelp" class="form-text text-muted">用户邮箱是未来用于登陆该平台的账号，请通知用户妥善保管。</small>
+            </div>
+            <div class="form-group">
+                {{ form.nickname.label }}
+                <p>{{ form.nickname(size = 64) }}</p>
+                <small id="nicknameHelp" class="form-text text-muted">请输入用户的真实姓名。</small>
+            </div>
+            <div class="form-group">
+                {{ form.password.label }}
+                <p>{{ form.password(size = 64) }}</p>
+            </div>
+            <div class="form-group">
+                {{ form.re_password.label }}
+                <p>{{ form.re_password(size = 64) }}</p>
+            </div>
+            <div class="form-group">
+                {{ form.account_status.label }}
+                <p>{{ form.account_status }}</p>
+            </div>
+            {% if captcha %}
+            <div class="form-group">
+                <p>{{ form.captcha.label }}</p>
+                <img src="{{ captcha.captcha_url }}" alt="captcha" width="130" height="50">
+                <p></p>
+                <p>{{ form.captcha(size = 8) }}</p>
+                <small id="captchaHelp" class="form-text text-muted">请在10分钟之内验证。</small>
+            </div>
+            {% endif %}
+        <button class="btn btn-info btn-lg" type=submit>提交</button>
+        </form>
         </div>
     </div>
 {% endblock %}

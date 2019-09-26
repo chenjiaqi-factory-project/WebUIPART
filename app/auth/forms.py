@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, widgets
+from wtforms import StringField, PasswordField, SubmitField, SelectField, widgets
 from wtforms.validators import DataRequired, EqualTo, Email
 
 
@@ -26,91 +26,99 @@ class RegisterRequestForm(FlaskForm):
 # Login form
 class LoginForm(FlaskForm):
     email = StringField(
-        "Email",
+        "用户邮箱",
         validators=[DataRequired(), Email()],
         widget=widgets.TextInput(),
         render_kw={
             "class": "form-control",
-            "placeholder": "Enter email",
+            "placeholder": "请输入用户邮箱",
             "required": "",
             "autofocus": "",
         },
     )
     password = PasswordField(
-        "Password",
+        "密码",
         validators=[DataRequired()],
         widget=widgets.PasswordInput(),
         render_kw={
             "class": "form-control",
-            "placeholder": "Password",
+            "placeholder": "请输入密码",
             "required": "",
             "autofocus": "",
         },
     )
     captcha = StringField(
-        "CAPTCHA",
+        "验证码",
         validators=[DataRequired()],
         render_kw={
             "class": "form-control",
-            "placeholder": "CAPTCHA",
+            "placeholder": "请输入验证码",
             "required": "",
             "autofocus": "",
         },
     )
-    submit = SubmitField("Login")
+    submit = SubmitField("登陆")
 
 
 # Register form
 class RegisterForm(FlaskForm):
     email = StringField(
-        "Email",
+        "用户邮箱",
         validators=[DataRequired(), Email()],
         render_kw={
             "class": "form-control",
-            "placeholder": "Enter your Email",
+            "placeholder": "请输入邮箱地址",
             "required": "",
             "autofocus": "",
         },
     )
     nickname = StringField(
-        "Username",
+        "用户姓名",
         validators=[DataRequired()],
         render_kw={
             "class": "form-control",
-            "placeholder": "Enter your Username",
+            "placeholder": "请输入用户姓名",
             "required": "",
             "autofocus": "",
         },
     )
     password = PasswordField(
-        "Password",
+        "输入密码",
         validators=[DataRequired()],
         render_kw={
             "class": "form-control",
-            "placeholder": "Enter your Password!",
+            "placeholder": "请输入密码",
             "required": "",
             "autofocus": "",
         },
     )
     re_password = PasswordField(
-        "Confirm",
+        "确认密码",
         validators=[DataRequired()],
         render_kw={
             "class": "form-control",
-            "placeholder": "Enter your Password again!",
+            "placeholder": "请再次确认密码",
             "required": "",
             "autofocus": "",
         },
+    )
+    account_status = SelectField(
+        "账户类型",
+        choices=[
+            ("employee", "员工"),
+            ("employer", "主管"),
+        ],
+        validators=[DataRequired()],
     )
     captcha = StringField(
-        "CAPTCHA",
+        "验证码",
         validators=[DataRequired()],
         render_kw={
             "class": "form-control",
-            "placeholder": "CAPTCHA",
+            "placeholder": "请输入四位验证码",
             "required": "",
             "autofocus": "",
         },
     )
-    submit = SubmitField("Register")
+    submit = SubmitField("创建新用户")
 
