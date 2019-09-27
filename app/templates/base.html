@@ -35,12 +35,12 @@
                             <li><a href="{{ url_for('water.water_data_submit_view') }}">用水量提交</a></li>
                             <li><a href="{{ url_for('elec.elec_data_submit_view') }}">用电量提交</a></li>
                         {% endif %}
+                        <li><a href="{{ url_for('auth.home_view', account_id=current_user.account_id) }}">我的主页</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{{ url_for('auth.home_view', account_id=current_user.account_id) }}">我的主页</a></li>
                         <li><a href="{{ url_for('logout_func') }}">退出登陆</a></li>
                         <li><a href="https://github.com/XinyaoTian">By - XinyaoTian</a></li>
-                        <li><a>v1.0.2</a></li>
+                        <li><a>欢迎您, {{ account.account_nickname }}。</a></li>
                     </ul>
                 </div>
             </div>

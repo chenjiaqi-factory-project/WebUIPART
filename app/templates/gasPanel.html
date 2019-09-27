@@ -35,7 +35,7 @@
                         <th>燃气读数</th>
                         <th>提交日期</th>
                         <th>提交时间</th>
-                        <th>员工编号</th>
+                        <th>提交人</th>
                     </tr>
                     {% for document in documents %}
                     <tr>
@@ -44,7 +44,7 @@
                         <td>{{ document.gas_indicator }}</td>
                         <td>{{ document.date }}</td>
                         <td>{{ document.time }}</td>
-                        <td>{{ document.employee_no }}</td>
+                        <td>{{ document.employee_name }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -58,10 +58,10 @@
                         <!--<b>Administer</b> said:-->
                     <!--</div>-->
                     <div class="panel-body">
-                        <h4>No more informations currently.</h4>
+                        <h4>目前还没有相关数据。</h4>
                     </div>
                     <div class="panel-footer">
-                        <b>Administer</b> at 2019-04-20/17:00:00
+                        By: <b>系统管理员</b>
                     </div>
                 </div>
             </div>

@@ -79,12 +79,19 @@ def gas_data_submit_view():
 @login_required
 @bp.route('/gas-data-submit', methods=['POST'])
 def data_submit_post():
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    # process end
     form = GasDataRecordForm()
     post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document'
     doc_dict = dict(request.form)
     doc_dict['boiler_room'] = str(form.boiler_room_and_no.data).split('/')[0]
     doc_dict['boiler_no'] = str(form.boiler_room_and_no.data).split('/')[1]
     doc_dict['employee_no'] = current_user.account_id
+    doc_dict['employee_name'] = account['account_nickname']
     doc_dict['datetime'] = get_current_datetime()
     doc_dict['date'] = get_current_date()
     doc_dict['time'] = get_current_time()
