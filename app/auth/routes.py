@@ -189,7 +189,7 @@ def register_account():
         register_url = 'http://' + Config.ACCOUNT_SERVICE_URL + '/api/account/account-creating'
         result = requests.post(register_url, data=account_info)
         if result.status_code == 200:
-            flash('新用户创建成功!', 'message')
+            flash('新用户创建成功!', 'success')
             return redirect(url_for('auth.register_view'))
         else:
             flash('该邮箱已被注册。', 'danger')
@@ -220,6 +220,14 @@ def home_view(account_id):
     else:
         gas_record_list = water_record_list = elec_record_list = []
 
+    # get record from user info
+    user_records_url = 'http://' + Config.ACCOUNT_SERVICE_URL + '/api/account/all-accounts'
+    result_user = requests.get(user_records_url)
+    if result_user.status_code == 200:
+        user_record_list = get_api_info(result_user)
+    else:
+        user_record_list = []
+
     # main function process below
     form = RegisterRequestForm()
     account_info_url = 'http://' + Config.ACCOUNT_SERVICE_URL + '/api/account/account-id/' +\
@@ -229,7 +237,7 @@ def home_view(account_id):
         account_info = get_api_info(result)[0]
         return render_template('auth/individual/home_page.html', form=form, account=account_info,
                                gas_record_list=gas_record_list, water_record_list=water_record_list,
-                               elec_record_list=elec_record_list)
+                               elec_record_list=elec_record_list, user_record_list=user_record_list)
     else:
         return redirect(url_for('auth.login_view'))
 

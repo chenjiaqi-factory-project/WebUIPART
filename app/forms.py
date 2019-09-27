@@ -20,3 +20,8 @@ class SendCsvFileForm(FlaskForm):
 class ViewPanelSearchForm(FlaskForm):
     boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=gasInfoClass.get_gas_field_list(), validators=[DataRequired()])
     submit = SubmitField('检索数据')
+
+
+# Deleting Form
+class DeleteForm(FlaskForm):
+    verification = SubmitField("确认删除")

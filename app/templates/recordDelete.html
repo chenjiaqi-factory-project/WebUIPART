@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+<!-- import form receiving model -->
+{% import 'bootstrap/wtf.html' as wtf %}
+
+
+{% block app_content %}
+    <h1>删除数据 </h1>
+    <br>
+    <h3>你确定要删除这条数据吗？ </h3>
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Just send a form to wtf is enough -->
+            <form method="post">
+                {{ form.csrf_token }}
+                <button class="btn btn-danger btn-lg" type=submit>确认删除</button>
+            </form>
+        </div>
+    </div>
+    <br>
+{% endblock %}
+
+
+
+{% block script_js %}
+{{ super() }}
+{% endblock %}

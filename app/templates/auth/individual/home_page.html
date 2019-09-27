@@ -8,12 +8,11 @@
     <p>您好, {{ account['account_nickname'] }}!</p>
     <br>
     {% if account.account_status == 'employee' %}
-        <h3>我提交的数据</h3>
-    {% endif %}
+        <h1>我提交的数据</h1>
     <div class="row">
-        {% if gas_record_list %}
             <div class="container">
-            <p>燃气数据</p>
+            <br>
+            <h3>燃气数据</h3>
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
@@ -23,7 +22,9 @@
                             <th>提交日期</th>
                             <th>提交时间</th>
                             <th>提交人</th>
+                            <th>操作</th>
                         </tr>
+                    {% if gas_record_list %}
                         {% for record in gas_record_list %}
                         <tr>
                             <td>{{ record.boiler_room }}</td>
@@ -32,17 +33,18 @@
                             <td>{{ record.date }}</td>
                             <td>{{ record.time }}</td>
                             <td>{{ account.account_nickname }}</td>
+                            <td><a href="{{ url_for('gas.delete_confirm', record_id= record['_id']) }}">撤销</a></td>
                         </tr>
                         {% endfor %}
+                    {% endif %}
                     </table>
                 </div>
             </div>
-        {% endif %}
     </div>
     <div class="row">
-        {% if water_record_list %}
             <div class="container">
-            <p>用水量数据</p>
+            <br>
+            <h3>用水量数据</h3>
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
@@ -51,25 +53,28 @@
                             <th>提交日期</th>
                             <th>提交时间</th>
                             <th>提交人</th>
+                            <th>操作</th>
                         </tr>
+                    {% if water_record_list %}
                         {% for record in water_record_list %}
                         <tr>
                             <td>{{ record.factory_no }}</td>
-                            <td>{{ record.gas_indicator }}</td>
+                            <td>{{ record.water_indicator }}</td>
                             <td>{{ record.date }}</td>
                             <td>{{ record.time }}</td>
                             <td>{{ account.account_nickname }}</td>
+                            <td><a href="{{ url_for('water.delete_confirm', record_id= record['_id']) }}">撤销</a></td>
                         </tr>
                         {% endfor %}
+                        {% endif %}
                     </table>
                 </div>
             </div>
-        {% endif %}
     </div>
     <div class="row">
-        {% if elec_record_list %}
             <div class="container">
-            <p>用电量数据</p>
+            <br>
+            <h3>用电量数据</h3>
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
@@ -78,19 +83,53 @@
                             <th>提交日期</th>
                             <th>提交时间</th>
                             <th>提交人</th>
+                            <th>操作</th>
                         </tr>
+                    {% if elec_record_list %}
                         {% for record in elec_record_list %}
                         <tr>
                             <td>{{ record.factory_no }}</td>
-                            <td>{{ record.gas_indicator }}</td>
+                            <td>{{ record.elec_indicator }}</td>
                             <td>{{ record.date }}</td>
                             <td>{{ record.time }}</td>
                             <td>{{ account.account_nickname }}</td>
+                            <td><a href="{{ url_for('elec.delete_confirm', record_id= record['_id']) }}">撤销</a></td>
                         </tr>
                         {% endfor %}
+                    {% endif %}
                     </table>
                 </div>
             </div>
-        {% endif %}
     </div>
+    {% endif %}
+    {% if account.account_status == 'admin' or account.account_status == 'employer' %}
+        <div class="row">
+            <div class="container">
+            <br>
+            <h3>用户信息一览</h3>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>用户邮箱</th>
+                            <th>用户姓名</th>
+                            <th>用户权限</th>
+                            <th>创建时间</th>
+                            <th>系统标识符</th>
+                        </tr>
+                    {% if user_record_list %}
+                        {% for record in user_record_list %}
+                        <tr>
+                            <td>{{ record.account_email }}</td>
+                            <td>{{ record.account_nickname }}</td>
+                            <td>{{ record.account_status }}</td>
+                            <td>{{ record.account_create_time }}</td>
+                            <td>{{ record.account_id }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </table>
+                </div>
+            </div>
+    </div>
+    {% endif %}
 {% endblock %}

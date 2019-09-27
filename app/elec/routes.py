@@ -6,6 +6,7 @@ from func_pack import get_current_date, get_last_date, get_last_date_strftime, g
     get_api_info_first, get_api_info, get_current_datetime, get_current_time, get_account_info_by_account_id
 from config import Config
 from app.elec.forms import ElecDataRecordForm, ElecDataStatsForm, ElecInfoClass
+from app.forms import DeleteForm
 import requests
 
 
@@ -44,7 +45,7 @@ def elec_stats_panel():
         sum_url = basic_sum_url + default_boiler_room_and_no + '/' + last_date + '/' + today_date
         successive_url = basic_successive_url + default_boiler_room_and_no + '/' + last_date + '/' + today_date
         flash('默认统计"今日与昨日"的用电消耗量。', 'info')
-    # get relative gas data
+    # get relative data
     # get first with dict type
     consumption_sum_dict = get_api_info_first(requests.get(sum_url))
     # get all with list type
@@ -91,4 +92,55 @@ def elec_data_submit_post():
         else:
             flash('发生了错误, 数据未成功提交', 'danger')
             return redirect(url_for('elec.elec_data_submit_view'))
+
+
+# delete view
+@bp.route('/deleting/<string:record_id>', methods=['GET', 'POST'])
+@login_required
+def delete_confirm(record_id):
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    # process end
+    form = DeleteForm()
+    # Get record info
+    record_url = 'http://' + Config.DB_OPS_URL + \
+                 '/api/elec/document/rid/' + str(record_id)
+    result = requests.get(record_url)
+    # Functional Part
+    if form.validate_on_submit():
+        if result.status_code == 200:
+            user_id = get_api_info(result)[0]['employee_no']
+
+            # check user's authentication by account_id in url whether match current_user.account_id
+            # Mention!! Type of current_user.account_id is not string!
+            if str(current_user.account_id) != str(user_id):
+                # back to detail viewing page
+                flash('试图删除不属于自己的数据', 'danger')
+                return redirect(
+                    url_for('auth.home_view', account_id=current_user.account_id))
+
+            # main function process below
+            delete_url = 'http://' + Config.DB_OPS_URL + \
+                         '/api/elec/document/' + str(record_id)
+            requests.delete(delete_url)
+            flash('数据删除成功', 'success')
+            return redirect(url_for('auth.home_view', account_id=current_user.account_id))
+    # View Part
+    else:
+        if result.status_code == 200:
+            user_id = get_api_info(result)[0]['employee_no']
+
+            # check user's authentication by account_id in url whether match current_user.account_id
+            # Mention!! Type of current_user.account_id is not string!
+            if str(current_user.account_id) != str(user_id):
+                # back to detail viewing page
+                return redirect(
+                    url_for('auth.home_view', account_id=current_user.account_id))
+
+            # main function process below
+            competition = get_api_info(result)[0]
+            return render_template('recordDelete.html', form=form, account=account)
 
