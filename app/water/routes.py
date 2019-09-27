@@ -1,8 +1,9 @@
 from app import app
 from flask import flash, render_template, redirect, url_for, request
 from app.water import bp
+from flask_login import current_user, login_required
 from func_pack import get_current_date, get_last_date, get_last_date_strftime, get_current_date_strftime,\
-    get_api_info_first, get_api_info, get_current_datetime, get_current_time
+    get_api_info_first, get_api_info, get_current_datetime, get_current_time, get_account_info_by_account_id
 from config import Config
 from app.water.forms import WaterInfoClass, WaterDataStatsForm, WaterDataRecordForm
 import requests
@@ -10,8 +11,16 @@ import requests
 
 # status-panel version 2
 # water stats panel
+@login_required
 @bp.route('/water-stats-panel', methods=['GET', 'POST'])
 def water_stats_panel():
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    # process end
+
     form = WaterDataStatsForm()
     # functional url
     basic_successive_url = 'http://' + Config.DB_OPS_URL + '/api/water/calculating/water-consumption/successive/'
@@ -46,16 +55,24 @@ def water_stats_panel():
     else:
         flash('数据统计成功!', 'success')
     # render templates
-    return render_template('water/waterStatsPanel.html', consumption_sum_dict=consumption_sum_dict,
+    return render_template('water/waterStatsPanel.html', consumption_sum_dict=consumption_sum_dict, account=account,
                            consumption_successive_list=consumption_successive_list, form=form, title='用水量数据统计')
 
 
+@login_required
 @bp.route('/water-data-submit', methods=['GET'])
 def water_data_submit_view():
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    # process end
     form = WaterDataRecordForm()
-    return render_template('water/waterDataSubmit.html', form=form, title='用水量数据提交')
+    return render_template('water/waterDataSubmit.html', form=form, title='用水量数据提交', account=account)
 
 
+@login_required
 @bp.route('/water-data-submit', methods=['POST'])
 def water_data_submit_post():
     form = WaterDataRecordForm()

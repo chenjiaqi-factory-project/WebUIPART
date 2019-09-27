@@ -136,6 +136,16 @@ def generate_random_code():
     return code
 
 
-if __name__ == '__main__':
+# 根据 account_id 返回账户信息
+def get_account_info_by_account_id(user_id):
+    account_url = 'http://' + Config.ACCOUNT_SERVICE_URL +\
+                  '/api/account/account-id/' + str(user_id)
+    result = requests.get(account_url)
+    if result.status_code == 200:
+        return get_api_info_first(result)
+    else:
+        return {'error': 'No such user'}
 
+
+if __name__ == '__main__':
     pass

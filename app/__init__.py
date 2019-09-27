@@ -8,6 +8,8 @@ app.config.from_object(Config)
 login = LoginManager(app)
 bootstrap = Bootstrap(app)
 
+login.login_view = 'auth.login_view'
+
 # blueprint for auth part
 from app.auth import bp as auth_bp
 app.register_blueprint(auth_bp, url_prefix='/auth')

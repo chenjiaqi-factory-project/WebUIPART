@@ -1,8 +1,9 @@
 from app import app
 from flask import flash, render_template, redirect, url_for, request
 from app.elec import bp
+from flask_login import current_user, login_required
 from func_pack import get_current_date, get_last_date, get_last_date_strftime, get_current_date_strftime,\
-    get_api_info_first, get_api_info, get_current_datetime, get_current_time
+    get_api_info_first, get_api_info, get_current_datetime, get_current_time, get_account_info_by_account_id
 from config import Config
 from app.elec.forms import ElecDataRecordForm, ElecDataStatsForm, ElecInfoClass
 import requests
@@ -10,8 +11,16 @@ import requests
 
 # status-panel version 2
 # elec stats panel
+@login_required
 @bp.route('/elec-stats-panel', methods=['GET', 'POST'])
 def elec_stats_panel():
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    # process end
+
     form = ElecDataStatsForm()
     # functional url
     basic_successive_url = 'http://' + Config.DB_OPS_URL + '/api/elec/calculating/consumption/successive/'
@@ -46,16 +55,24 @@ def elec_stats_panel():
     else:
         flash('数据统计成功!', 'success')
     # render templates
-    return render_template('elec/elecStatsPanel.html', consumption_sum_dict=consumption_sum_dict,
+    return render_template('elec/elecStatsPanel.html', consumption_sum_dict=consumption_sum_dict, account=account,
                            consumption_successive_list=consumption_successive_list, form=form, title='用电量数据统计')
 
 
+@login_required
 @bp.route('/elec-data-submit', methods=['GET'])
 def elec_data_submit_view():
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    # process end
     form = ElecDataRecordForm()
-    return render_template('elec/elecDataSubmit.html', form=form, title='用电量数据提交')
+    return render_template('elec/elecDataSubmit.html', form=form, title='用电量数据提交', account=account)
 
 
+@login_required
 @bp.route('/elec-data-submit', methods=['POST'])
 def elec_data_submit_post():
     form = ElecDataRecordForm()

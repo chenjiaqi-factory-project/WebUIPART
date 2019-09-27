@@ -1,7 +1,7 @@
 from app import app
 from flask import render_template, url_for, redirect, flash, request, session
 from app.auth.forms import ResetPasswordRequestForm, ResetPasswordForm, RegisterRequestForm, LoginForm, RegisterForm
-from func_pack import get_api_info, generate_random_code
+from func_pack import get_api_info, get_account_info_by_account_id
 from config import Config
 from app.auth import bp
 from flask_login import current_user, login_user, login_required, logout_user
@@ -130,9 +130,14 @@ def login_verify():
 # register view
 @bp.route('/register', methods=['GET'])
 def register_view():
-    # check whether user has already login
-    if current_user.is_authenticated:
-        return redirect(url_for('auth.home_view', account_id=current_user.account_id))
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    if account['account_status'] != 'admin':
+        return redirect(url_for('auth.home_view'))
+    # process end
 
     # main function process below
     form = RegisterForm()
@@ -149,15 +154,20 @@ def register_view():
     else:
         captcha['captcha_code'] = '0000'
         captcha['captcha_url'] = 'error'
-    return render_template('auth/register/register.html', form=form, captcha=captcha)
+    return render_template('auth/register/register.html', form=form, captcha=captcha, account=account)
 
 
 # register post
 @bp.route('/register', methods=['POST'])
 def register_account():
-    # check whether user has already login
-    if current_user.is_authenticated:
-        return redirect(url_for('auth.home_view', account_id=current_user.account_id))
+    # auth process
+    if current_user.is_authenticated is True:
+        account = get_account_info_by_account_id(current_user.account_id)
+    else:
+        return redirect(url_for('auth.login_view'))
+    if account['account_status'] != 'admin':
+        return redirect(url_for('auth.home_view'))
+    # process end
 
     # main function process below
     form = RegisterForm()
@@ -175,13 +185,14 @@ def register_account():
         account_info['account_email'] = form.email.data
         account_info['account_nickname'] = form.nickname.data
         account_info['password'] = form.re_password.data
+        account_info['account_status'] = form.account_status.data
         register_url = 'http://' + Config.ACCOUNT_SERVICE_URL + '/api/account/account-creating'
         result = requests.post(register_url, data=account_info)
         if result.status_code == 200:
-            account = get_api_info(result)[0]
-            return redirect(url_for('auth.login_view', account_id=account['account_id']))
+            flash('新用户创建成功!', 'message')
+            return redirect(url_for('auth.register_view'))
         else:
-            flash('Please use an different email address.', 'danger')
+            flash('该邮箱已被注册。', 'danger')
             return redirect(url_for('auth.register_view'))
 
 
