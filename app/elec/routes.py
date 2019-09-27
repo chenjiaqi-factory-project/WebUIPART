@@ -79,6 +79,7 @@ def elec_data_submit_post():
     post_doc_url = 'http://' + Config.DB_OPS_URL + '/api/elec/document'
     doc_dict = dict(request.form)
     doc_dict['factory_no'] = form.factory_no.data
+    doc_dict['employee_no'] = current_user.account_id
     doc_dict['datetime'] = get_current_datetime()
     doc_dict['date'] = get_current_date()
     doc_dict['time'] = get_current_time()

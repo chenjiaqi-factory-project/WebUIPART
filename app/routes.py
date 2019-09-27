@@ -80,9 +80,9 @@ def data_download_post():
         result = requests.get(get_doc_url)
         if result.status_code == 200:
             document_list = get_api_info(result)
-            write_csv(document_list, Config.DATA_CSV_PATH)
+            write_csv(document_list, Config.DATA_CSV_PATH + file_name)
             flash('数据下载成功!', 'success')
-            return send_file(Config.DATA_CSV_SEND_PATH, mimetype='text/csv',
+            return send_file(Config.DATA_CSV_SEND_PATH + file_name, mimetype='text/csv',
                              attachment_filename=file_name, as_attachment=True)
 
 

@@ -83,6 +83,7 @@ def data_submit_post():
     doc_dict = dict(request.form)
     doc_dict['boiler_room'] = str(form.boiler_room_and_no.data).split('/')[0]
     doc_dict['boiler_no'] = str(form.boiler_room_and_no.data).split('/')[1]
+    doc_dict['employee_no'] = current_user.account_id
     doc_dict['datetime'] = get_current_datetime()
     doc_dict['date'] = get_current_date()
     doc_dict['time'] = get_current_time()

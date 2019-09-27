@@ -25,5 +25,5 @@ class Config(object):
     CAPTCHA_SERVICE_PORT = os.environ.get('CAPTCHA_PART_SERVICE_PORT')
     CAPTCHA_SERVICE_URL = CAPTCHA_SERVICE_IP + ':' + CAPTCHA_SERVICE_PORT
 
-    DATA_CSV_PATH = './app/data_process/data.csv'
-    DATA_CSV_SEND_PATH = 'data_process/data.csv'
+    DATA_CSV_PATH = './app/data_process/'
+    DATA_CSV_SEND_PATH = 'data_process/'

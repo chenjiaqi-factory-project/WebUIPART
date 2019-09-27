@@ -11,7 +11,6 @@ elecInfoClass = ElecInfoClass()
 class ElecDataRecordForm(FlaskForm):
     factory_no = SelectField('选择电表地点', choices=elecInfoClass.get_elec_field_list(), validators=[DataRequired()])
     elec_indicator = StringField('用电量', validators=[DataRequired()])
-    employee_no = StringField('员工编号', validators=[DataRequired()])
     submit = SubmitField('提交')
 
 

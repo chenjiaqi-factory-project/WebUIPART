@@ -11,7 +11,6 @@ waterInfoClass = WaterInfoClass()
 class WaterDataRecordForm(FlaskForm):
     factory_no = SelectField('选择水表地点', choices=waterInfoClass.get_water_field_list(), validators=[DataRequired()])
     water_indicator = StringField('用水量', validators=[DataRequired()])
-    employee_no = StringField('员工编号', validators=[DataRequired()])
     submit = SubmitField('提交')
 
 

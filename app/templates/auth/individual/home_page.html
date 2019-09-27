@@ -6,8 +6,91 @@
     <h1>我的主页</h1>
     <br>
     <p>您好, {{ account['account_nickname'] }}!</p>
+    <br>
+    {% if account.account_status == 'employee' %}
+        <h3>我提交的数据</h3>
+    {% endif %}
     <div class="row">
-        <div class="col-md-4">
-        </div>
+        {% if gas_record_list %}
+            <div class="container">
+            <p>燃气数据</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>锅炉所在地</th>
+                            <th>锅炉编号</th>
+                            <th>燃气读数</th>
+                            <th>提交日期</th>
+                            <th>提交时间</th>
+                            <th>提交人</th>
+                        </tr>
+                        {% for record in gas_record_list %}
+                        <tr>
+                            <td>{{ record.boiler_room }}</td>
+                            <td>{{ record.boiler_no }}</td>
+                            <td>{{ record.gas_indicator }}</td>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.time }}</td>
+                            <td>{{ account.account_nickname }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% if water_record_list %}
+            <div class="container">
+            <p>用水量数据</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>水表所在地</th>
+                            <th>水表读数</th>
+                            <th>提交日期</th>
+                            <th>提交时间</th>
+                            <th>提交人</th>
+                        </tr>
+                        {% for record in water_record_list %}
+                        <tr>
+                            <td>{{ record.factory_no }}</td>
+                            <td>{{ record.gas_indicator }}</td>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.time }}</td>
+                            <td>{{ account.account_nickname }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% if elec_record_list %}
+            <div class="container">
+            <p>用电量数据</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>电表所在地</th>
+                            <th>电表读数</th>
+                            <th>提交日期</th>
+                            <th>提交时间</th>
+                            <th>提交人</th>
+                        </tr>
+                        {% for record in elec_record_list %}
+                        <tr>
+                            <td>{{ record.factory_no }}</td>
+                            <td>{{ record.gas_indicator }}</td>
+                            <td>{{ record.date }}</td>
+                            <td>{{ record.time }}</td>
+                            <td>{{ account.account_nickname }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

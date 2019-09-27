@@ -11,7 +11,6 @@ gasInfoClass = GasInfoClass()
 class GasDataRecordForm(FlaskForm):
     boiler_room_and_no = SelectField('选择锅炉房及锅炉', choices=gasInfoClass.get_gas_field_list(), validators=[DataRequired()])
     gas_indicator = StringField('燃气表读数', validators=[DataRequired()])
-    employee_no = StringField('员工编号', validators=[DataRequired()])
     submit = SubmitField('提交')
 
 

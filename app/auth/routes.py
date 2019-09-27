@@ -4,7 +4,7 @@ from app.auth.forms import ResetPasswordRequestForm, ResetPasswordForm, Register
 from func_pack import get_api_info, get_account_info_by_account_id
 from config import Config
 from app.auth import bp
-from flask_login import current_user, login_user, login_required, logout_user
+from flask_login import current_user, login_user, login_required
 from app.models import User
 import requests
 
@@ -206,6 +206,20 @@ def home_view(account_id):
     if str(current_user.account_id) != account_id:
         return redirect(url_for('auth.home_view', account_id=str(current_user.account_id)))
 
+    # get records from mongodb
+    gas_records_url = 'http://' + Config.DB_OPS_URL + '/api/gas/document/employee-no/fuzzy/' + account_id
+    water_records_url = 'http://' + Config.DB_OPS_URL + '/api/water/document/employee-no/fuzzy/' + account_id
+    elec_records_url = 'http://' + Config.DB_OPS_URL + '/api/elec/document/employee-no/fuzzy/' + account_id
+    result_gas = requests.get(gas_records_url)
+    result_water = requests.get(water_records_url)
+    result_elec = requests.get(elec_records_url)
+    if result_elec.status_code == 200 and result_gas.status_code == 200 and result_water.status_code ==200:
+        gas_record_list = get_api_info(result_gas)
+        water_record_list = get_api_info(result_water)
+        elec_record_list = get_api_info(result_elec)
+    else:
+        gas_record_list = water_record_list = elec_record_list = []
+
     # main function process below
     form = RegisterRequestForm()
     account_info_url = 'http://' + Config.ACCOUNT_SERVICE_URL + '/api/account/account-id/' +\
@@ -213,7 +227,9 @@ def home_view(account_id):
     result = requests.get(account_info_url)
     if result.status_code == 200:
         account_info = get_api_info(result)[0]
-        return render_template('auth/individual/home_page.html', form=form, account=account_info)
+        return render_template('auth/individual/home_page.html', form=form, account=account_info,
+                               gas_record_list=gas_record_list, water_record_list=water_record_list,
+                               elec_record_list=elec_record_list)
     else:
         return redirect(url_for('auth.login_view'))
 

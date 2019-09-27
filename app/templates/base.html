@@ -22,10 +22,10 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <div class="container">
                     <ul class="nav navbar-nav">
+                        <li><a href="{{ url_for('gas_panel_view') }}">数据总览</a></li>
                         {% if account['account_status'] == 'admin' %}
                             <li><a href="{{ url_for('auth.register_view') }}">创建新用户</a></li>
                         {% elif account['account_status'] == 'employer' %}
-                            <li><a href="{{ url_for('gas_panel_view') }}">数据总览</a></li>
                             <li><a href="{{ url_for('gas.gas_stats_panel') }}">燃气统计</a></li>
                             <li><a href="{{ url_for('water.water_stats_panel') }}">用水量统计</a></li>
                             <li><a href="{{ url_for('elec.elec_stats_panel') }}">用电量统计</a></li>
@@ -35,9 +35,9 @@
                             <li><a href="{{ url_for('water.water_data_submit_view') }}">用水量提交</a></li>
                             <li><a href="{{ url_for('elec.elec_data_submit_view') }}">用电量提交</a></li>
                         {% endif %}
-                            <li><a href="{{ url_for('auth.home_view', account_id=current_user.account_id) }}">我的主页</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{{ url_for('auth.home_view', account_id=current_user.account_id) }}">我的主页</a></li>
                         <li><a href="{{ url_for('logout_func') }}">退出登陆</a></li>
                         <li><a href="https://github.com/XinyaoTian">By - XinyaoTian</a></li>
                         <li><a>v1.0.2</a></li>
