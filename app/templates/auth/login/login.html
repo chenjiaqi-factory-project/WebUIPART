@@ -3,38 +3,48 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
-    <h1>用户登陆</h1>
-    <br>
-    <p>欢迎您使用数字化工厂监测平台。</p>
+
     <div class="row">
         <div class="col-md-4">
-            <!-- Just send a form to wtf is enough -->
-            <form class="form-signin" method="post">
-                    {{ form.csrf_token }}
-                <div class="form-group">
-                    <p>{{ form.email.label }}</p>
-                    {{ form.email }}
-                    <!-- <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"> -->
+            <h1>用户登陆</h1>
+            <br>
+            <p>欢迎您使用数字化工厂监测平台。</p>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <!-- Just send a form to wtf is enough -->
+                    <form class="form-signin" method="post">
+                            {{ form.csrf_token }}
+                        <div class="form-group">
+                            <p>{{ form.email.label }}</p>
+                            {{ form.email }}
+                            <!-- <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"> -->
+                        </div>
+                        <div class="form-group">
+                            <p>{{ form.password.label }}</p>
+                            {{ form.password }}
+                            <!-- <label for="exampleInputPassword1">Password</label> -->
+                            <!-- <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"> -->
+                        </div>
+                        {% if captcha %}
+                        <div class="form-group">
+                            <p>{{ form.captcha.label }}</p>
+                            <img src="{{ captcha.captcha_url }}" alt="captcha" width="130" height="50">
+                            <!-- {{ form.captcha.label }} -->
+                            <p></p>
+                            <p>{{ form.captcha(size = 8) }}</p>
+                            <small id="captchaHelp" class="form-text text-muted">请在10分钟之内验证。</small>
+                        </div>
+                        {% endif %}
+                    <button type="submit" class="btn btn-primary">登陆</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <p>{{ form.password.label }}</p>
-                    {{ form.password }}
-                    <!-- <label for="exampleInputPassword1">Password</label> -->
-                    <!-- <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password"> -->
-                </div>
-                {% if captcha %}
-                <div class="form-group">
-                    <p>{{ form.captcha.label }}</p>
-                    <img src="{{ captcha.captcha_url }}" alt="captcha" width="130" height="50">
-                    <!-- {{ form.captcha.label }} -->
-                    <p></p>
-                    <p>{{ form.captcha(size = 8) }}</p>
-                    <small id="captchaHelp" class="form-text text-muted">请在10分钟之内验证。</small>
-                </div>
-                {% endif %}
-            <button type="submit" class="btn btn-primary">登陆</button>
-            </form>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h3> —— 专业 | 可靠 | 安全 | 高效 —— </h3>
+            <br>
+            <img src="{{ url_for('static', _external = True, filename='img/FrontPage.png') }}">
         </div>
     </div>
 {% endblock %}
