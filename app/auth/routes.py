@@ -217,6 +217,9 @@ def home_view(account_id):
         gas_record_list = get_api_info(result_gas)
         water_record_list = get_api_info(result_water)
         elec_record_list = get_api_info(result_elec)
+        gas_record_list.reverse()
+        water_record_list.reverse()
+        elec_record_list.reverse()
     else:
         gas_record_list = water_record_list = elec_record_list = []
 

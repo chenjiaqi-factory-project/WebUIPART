@@ -30,7 +30,7 @@
                         <li><a href="{{ url_for('gas_panel_view') }}">数据总览</a></li>
                         {% if account['account_status'] == 'admin' %}
                             <li><a href="{{ url_for('auth.register_view') }}">创建新用户</a></li>
-                        {% elif account['account_status'] == 'employer' %}
+                        {% elif account['account_status'] == 'employer' or account['account_status'] == 'employee' %}
                             <li><a href="{{ url_for('gas.gas_stats_panel') }}">燃气统计</a></li>
                             <li><a href="{{ url_for('water.water_stats_panel') }}">用水量统计</a></li>
                             <li><a href="{{ url_for('elec.elec_stats_panel') }}">用电量统计</a></li>
