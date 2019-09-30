@@ -9,8 +9,8 @@ class Config(object):
     # Identifiers when generating CAPTCHA
     IDENTIFIERS = 'ABCDEFGHIJKLMNPQRSTUVWXYZ12345789'
 
-    DB_OPS_IP = '127.0.0.1'
-    DB_OPS_PORT = '5000'
+    DB_OPS_IP = os.environ.get('DB_OPS_IP')
+    DB_OPS_PORT = os.environ.get('DB_OPS_PORT')
     # DB_OPS_IP = os.environ.get('DB_OPS_IP')
     # DB_OPS_PORT = os.environ.get('DB_OPS_PORT')
     DB_OPS_URL = DB_OPS_IP + ':' + DB_OPS_PORT
